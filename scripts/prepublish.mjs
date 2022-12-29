@@ -44,5 +44,5 @@ try {
 
   console.log(`版本号： ${version} -> ${_data.version}`)
 
-  precess.exits(0)
+  process.exits(0)
 }
