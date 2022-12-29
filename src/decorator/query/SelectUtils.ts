@@ -21,24 +21,32 @@ export const placeHolderRegExp = new RegExp(/\${(\w+)}/g)
 export const resultsAliasRegExp = new RegExp(/select+\s*(\S+)+\s*from/)
 
 export default class SelectUtils {
-  private storageTransformSql: string
+  private transformSql: string
 
-  private storageSqlResult: string | null
+  private resultAlias: string | undefined
 
-  private storagePreHandleKeys: Array<string> = []
+  private preHandleKeys: Array<string> = []
 
-  private storagePlaceHolderKeys: Array<RegExpExecArray> = []
+  private placeHolderKeys: Array<RegExpExecArray> = []
 
-  private storagePlaceHolderSymbolKeys: Array<RegExpExecArray> = []
+  private placeHolderSymbolKeys: Array<RegExpExecArray> = []
 
   /**
    * 自动处理参数
    * @param sql 
    * @param resultsAlias
    */
-  constructor(sql: string, resultsAlias: string | null) {
-    this.storageTransformSql = sql
-    this.storageSqlResult = resultsAlias
+  constructor(sql: string, resultsAlias: string | undefined) {
+    this.transformSql = sql
+    this.resultAlias = resultsAlias
+
+    this.handleSelect()
+  }
+
+  /**
+   * 开始处理
+   */
+  private handleSelect() {
 
     this.handlePreHandleRegExp()
 
@@ -53,32 +61,32 @@ export default class SelectUtils {
    * 获得工具类处理后的sql
    * @returns 处理后的sql 例如select user_id as userId where id = ?
    */
-  getStorageTransformSql() {
-    return this.storageTransformSql
+  getTransformSql() {
+    return this.transformSql
   }
 
   /**
    * 例如 select * from user where id = &{0} and name = &{1} 那么这里就是['0','1']
    * @returns 预处理占位符的keys
    */
-  getStoragePreHandleKeys() {
-    return this.storagePreHandleKeys
+  getpreHandleKeys() {
+    return this.preHandleKeys
   }
 
   /**
    * 例如 select * from user where id = ${0} and name = ${1} 那么这里就是['0','1']
    * @returns 占位符的keys
    */
-  getStoragePlaceHolderKeys() {
-    return this.storagePlaceHolderKeys
+  getPlaceHolderKeys() {
+    return this.placeHolderKeys
   }
 
   /**
    * 例如 select * from user where id = #{0} and name = #{1} 那么这里就是['0','1']
    * @returns 占位符双引号的keys
    */
-  getStoragePlaceHolderSymbolKeys() {
-    return this.storagePlaceHolderSymbolKeys
+  getPlaceHolderSymbolKeys() {
+    return this.placeHolderSymbolKeys
   }
 
   /**
@@ -86,13 +94,13 @@ export default class SelectUtils {
    */
   private handlePreHandleRegExp() {
     let temporaryRegExp
-    let temporaryRegExpSql = this.storageTransformSql
+    let temporaryRegExpSql = this.transformSql
     while ((temporaryRegExp = preHandleRegExp.exec(temporaryRegExpSql))) {
       const [replaceTag, matchName] = temporaryRegExp
 
-      this.storageTransformSql = this.storageTransformSql.replace(replaceTag, '?')
+      this.transformSql = this.transformSql.replace(replaceTag, '?')
 
-      this.storagePreHandleKeys.push(matchName)
+      this.preHandleKeys.push(matchName)
     }
   }
 
@@ -101,8 +109,8 @@ export default class SelectUtils {
    */
   private handlePlaceHolderRegExp() {
     let temporaryRegExp
-    while ((temporaryRegExp = placeHolderRegExp.exec(this.storageTransformSql))) {
-      this.storagePlaceHolderKeys.push(temporaryRegExp)
+    while ((temporaryRegExp = placeHolderRegExp.exec(this.transformSql))) {
+      this.placeHolderKeys.push(temporaryRegExp)
     }
   }
 
@@ -111,8 +119,8 @@ export default class SelectUtils {
    */
   private handlePlaceHolderSymbolRegExp() {
     let temporaryRegExp
-    while ((temporaryRegExp = placeHolderSymbolRegExp.exec(this.storageTransformSql))) {
-      this.storagePlaceHolderSymbolKeys.push(temporaryRegExp)
+    while ((temporaryRegExp = placeHolderSymbolRegExp.exec(this.transformSql))) {
+      this.placeHolderSymbolKeys.push(temporaryRegExp)
     }
   }
 
@@ -120,11 +128,11 @@ export default class SelectUtils {
    * 处理返回值 -> select xxx from
    */
   private handleResultsAlias() {
-    if (this.storageSqlResult === null) {
+    if (this.resultAlias === undefined) {
       return
     }
 
-    let [, matchName] = resultsAliasRegExp.exec(this.storageTransformSql) as RegExpExecArray
-    this.storageTransformSql = this.storageTransformSql.replace(matchName, this.storageSqlResult)
+    let [, matchName] = resultsAliasRegExp.exec(this.transformSql) as RegExpExecArray
+    this.transformSql = this.transformSql.replace(matchName, this.resultAlias)
   }
 }

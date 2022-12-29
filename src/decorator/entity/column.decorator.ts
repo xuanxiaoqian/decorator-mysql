@@ -5,17 +5,17 @@ import { humpToLine } from "./utils"
 
 /**
  * column装饰器工厂
- * @param humpKey 驼峰Key
+ * @param isHump 
  * @returns 
  */
 const columnDecoratorFactory = (isHump?: boolean) => {
     return (metadata?: columnMetadataType): PropertyDecorator => {
-        return function (target, key) {
+        return function (target, propertyKey) {
             const columns = Reflect.getMetadata(ENTITY_COLUMN, target) ?? {}
 
-            let smallHump = isHump ? humpToLine(key) : key
+            let smallHump = isHump ? humpToLine(propertyKey) : propertyKey
 
-            columns[key] = metadata?.name ?? smallHump
+            columns[propertyKey] = metadata?.name ?? smallHump
 
             Reflect.defineMetadata(ENTITY_COLUMN, columns, target)
         }

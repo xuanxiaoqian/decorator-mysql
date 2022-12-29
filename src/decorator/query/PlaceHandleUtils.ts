@@ -1,25 +1,35 @@
 
 
 import SelectUtils from './SelectUtils'
+import { Typeof } from './utils'
 
+/**
+ * 处理占位符的参数,此函数需要注意性能优化
+ */
 export default class PlaceHandleUtils {
   paramsType: string
   selectUtils: SelectUtils
   paramsData: Array<any>
 
-  currentExecuteValueList: any[]
+  currentExecuteValueList: any[] = []
+
+  //原sql
+  pureSql: string
 
   // 处理后的sql
   currentExecuteSql: string
 
-  constructor(attribute: { paramsType: string; selectUtils: SelectUtils; paramsData: Array<any>; currentExecuteValueList: any[]; currentExecuteSql: string }) {
-    this.paramsType = attribute.paramsType
-    this.selectUtils = attribute.selectUtils
-    this.paramsData = attribute.paramsData
-    this.currentExecuteValueList = attribute.currentExecuteValueList
-    this.currentExecuteSql = attribute.currentExecuteSql
+  constructor(selectUtils: SelectUtils, paramsData: Array<any>) {
+    this.paramsType = Typeof(paramsData)
+    this.selectUtils = selectUtils
+    this.paramsData = paramsData
 
-    this.handlePlace()
+    this.pureSql = selectUtils.getTransformSql()
+  }
+
+
+  setParamsData(paramsData: Array<any>) {
+    this.paramsData = paramsData
   }
 
   /**
@@ -28,34 +38,32 @@ export default class PlaceHandleUtils {
   handlePlace() {
     const selectUtils = this.selectUtils
     let args = this.paramsData
-    const currentExecuteValueList = this.currentExecuteValueList
-    let currentExecuteSql = this.currentExecuteSql
+    const currentExecuteValueList: any[] = []
+    let currentExecuteSql = this.pureSql
 
     // &{}占位符
-    if (selectUtils.getStoragePreHandleKeys().length > 0) {
-      selectUtils.getStoragePreHandleKeys().map((key) => {
-        let currentArgs = this.paramsType == 'object' ? args[0][key] : args[+key]
-        currentExecuteValueList.push(currentArgs)
-      })
-    }
+    selectUtils.getpreHandleKeys().map((key) => {
+      let currentArgs = this.paramsType == 'object' ? args[0][key] : args[+key]
+      currentExecuteValueList.push(currentArgs)
+    })
+
 
     // ${}占位符
-    if (selectUtils.getStoragePlaceHolderKeys().length > 0) {
-      selectUtils.getStoragePlaceHolderKeys().map(([replaceTag, matchName]) => {
-        let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
-        currentExecuteSql = currentExecuteSql.replace(replaceTag, currentArgs)
-      })
-    }
+    selectUtils.getPlaceHolderKeys().map(([replaceTag, matchName]) => {
+      let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
+      currentExecuteSql = currentExecuteSql.replace(replaceTag, currentArgs)
+    })
+
 
     // #{}占位符
-    if (selectUtils.getStoragePlaceHolderSymbolKeys().length > 0) {
-      selectUtils.getStoragePlaceHolderSymbolKeys().map(([replaceTag, matchName]) => {
-        let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
-        currentExecuteSql = currentExecuteSql.replace(replaceTag, `'${currentArgs}'`)
-      })
-    }
+    selectUtils.getPlaceHolderSymbolKeys().map(([replaceTag, matchName]) => {
+      let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
+      currentExecuteSql = currentExecuteSql.replace(replaceTag, `'${currentArgs}'`)
+    })
+
 
     // 基础类型需要重新赋值
     this.currentExecuteSql = currentExecuteSql
+    this.currentExecuteValueList = currentExecuteValueList
   }
 }

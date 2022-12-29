@@ -1,4 +1,3 @@
-
 import mysql, { Pool, PoolOptions } from 'mysql2/promise'
 
 export let pool: Pool

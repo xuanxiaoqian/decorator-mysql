@@ -4,7 +4,7 @@ import { resultConfigType } from "./types";
 
 
 export const Result = <T = never>(entity: Function, config?: resultConfigType<T>): PropertyDecorator => {
-    return function (target, key) {
+    return function (target, propertyKey) {
         const entityObject = Reflect.getMetadata(ENTITY_COLUMN, entity.prototype) ?? {}
 
         let currentSelectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, target) as string ?? ''

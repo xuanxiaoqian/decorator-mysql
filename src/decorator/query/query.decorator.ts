@@ -2,7 +2,6 @@ import { pool } from "../../mysql"
 import { CURRENT_SELECT_RESULT } from "../constants"
 import PlaceHandleUtils from "./PlaceHandleUtils"
 import SelectUtils from "./SelectUtils"
-import { Typeof } from "./utils"
 import { factoryConfigType } from "./types"
 
 
@@ -12,49 +11,79 @@ import { factoryConfigType } from "./types"
  * @returns
  */
 const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
-    return (sql: string) => {
-        return function (target: any, propertyKey: PropertyKey) {
-            process.nextTick(() => {
-                let selectUtils: SelectUtils
-                target[propertyKey] = new Proxy(new Function(), {
-                    apply: async (applyTarget, thisBinding, args) => {
-                        if (selectUtils === undefined) {
-                            let selectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, target) as string ?? ''
-                            selectUtils = new SelectUtils(sql, selectResult)
-                            console.log(selectResult);
+    return (sql: string): PropertyDecorator => {
+        return function (target, propertyKey) {
 
-                        }
+            let selectUtils: SelectUtils
 
-                        // 当前执行的参数
-                        let currentExecuteValueList: any[] = []
+            let placeHandleUtils: PlaceHandleUtils
 
-                        // 处理后的sql
-                        let currentExecuteSql = selectUtils.getStorageTransformSql()
+            // 处理好的SQL
+            let currentExecuteSql: string
 
-                        // 没有匹配到占位符
-                        if (selectUtils.getStoragePlaceHolderKeys().length === 0 && selectUtils.getStoragePlaceHolderSymbolKeys().length === 0 && selectUtils.getStoragePreHandleKeys().length === 0) {
-                            currentExecuteValueList = args
+            // 当前执行的参数
+            let currentExecuteValueList: any[] = []
+
+            // 是否纯sql,不携带任何参数
+            let isPureSql: boolean = false
+
+            // 是使用的是@Select装饰器
+            let isPureSelect: boolean = false
+
+            Reflect.set(target, propertyKey, new Proxy(new Function(), {
+                apply: async (applyTarget, thisBinding, args) => {
+                    if (selectUtils === undefined) {
+                        let selectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, target)
+                        selectUtils = new SelectUtils(sql, selectResult)
+                        currentExecuteSql = selectUtils.getTransformSql()
+
+                        if (selectUtils.getPlaceHolderKeys().length === 0 && selectUtils.getPlaceHolderSymbolKeys().length === 0 && selectUtils.getpreHandleKeys().length === 0) {
+                            isPureSql = true
                         } else {
-                            const placeHandleUtils = new PlaceHandleUtils({ paramsType: Typeof(args[0]), selectUtils: selectUtils, paramsData: args, currentExecuteValueList: currentExecuteValueList, currentExecuteSql: currentExecuteSql })
-                            currentExecuteValueList = placeHandleUtils.currentExecuteValueList
-                            currentExecuteSql = placeHandleUtils.currentExecuteSql
+                            placeHandleUtils = new PlaceHandleUtils(selectUtils, args)
                         }
 
-                        console.log(currentExecuteSql, currentExecuteValueList)
-
-                        const conn = pool
-
-                        let rows: Array<any> = []
-                        rows = await conn.execute(currentExecuteSql, currentExecuteValueList)
-
-                        if (factoryConfig?.selectOne) {
-                            rows[0].length > 0 ? (rows[0] = rows[0][0]) : (rows[0] = {})
+                        if (!factoryConfig?.selectOne && !factoryConfig?.originResult) {
+                            isPureSelect = true
                         }
+                    }
 
-                        return factoryConfig?.originResult ? rows : rows[0]
-                    },
-                })
-            })
+
+                    // 纯sql
+                    if (isPureSql) {
+                        currentExecuteValueList = args
+                    } else {
+                        placeHandleUtils.setParamsData(args)
+                        placeHandleUtils.handlePlace()
+
+                        currentExecuteValueList = placeHandleUtils.currentExecuteValueList
+                        currentExecuteSql = placeHandleUtils.currentExecuteSql
+                    }
+
+                    console.log(currentExecuteSql, currentExecuteValueList)
+
+                    const conn = pool
+
+                    let rows = await conn.execute(currentExecuteSql, currentExecuteValueList) as Array<any>
+
+
+                    if (isPureSelect) {
+                        return rows[0]
+                    }
+
+                    if (factoryConfig?.selectOne) {
+                        return rows[0].length > 0 ? rows[0][0] : {}
+                    }
+
+                    if (factoryConfig?.originResult) {
+                        return rows
+                    }
+
+                },
+
+            }))
+
+
         }
     }
 }

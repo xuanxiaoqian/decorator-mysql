@@ -25,7 +25,7 @@ function removeDir(filePath) {
 
 removeDir('./dist')
 
-glob('src/**/*.ts', {}, function (er, files) {
+glob('src/**/*.ts', {}, function (_, files) {
   esbuild
     .build({
       entryPoints: files,
@@ -37,11 +37,11 @@ glob('src/**/*.ts', {}, function (er, files) {
       plugins: [],
     })
     .then(() => {
-      process.exec('npx tsc --declaration -p ./ -t es2015 --emitDeclarationOnly --outDir dist/types', (error, stdout, stderr) => { })
+      process.exec('npx tsc --declaration -p ./ -t es2015 --emitDeclarationOnly --outDir dist/types')
     })
     .catch((err) => {
       console.log(err)
-      process.exit(1)
+      process.exitCode(1)
     })
 })
 
