@@ -1,0 +1,1 @@
+查询装饰器  -< @Select @Insert @Delete @Update

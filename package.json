@@ -1,0 +1,40 @@
+{
+  "name": "decorator-mysql",
+  "version": "1.0.15",
+  "description": "爱用装饰器风格查询MySQL的框架一枚鸭~",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "typings": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "node ./scripts/build.js",
+    "prepublishOnly": "zx ./scripts/prepublish.mjs"
+  },
+  "keywords": [
+    "decorator-mysql",
+    "decorator",
+    "mysql",
+    "xuanxiaoqian"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuanxiaoqian/decorator-mysql"
+  },
+  "bugs": {
+    "url": "https://github.com/xuanxiaoqian/decorator-mysql/issues"
+  },
+  "author": "xuanxiaoqian",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.16.12",
+    "glob": "^8.0.3",
+    "typescript": "^4.9.4",
+    "zx": "^7.0.8"
+  },
+  "dependencies": {
+    "mysql2": "^2.3.3",
+    "reflect-metadata": "^0.1.13"
+  }
+}
