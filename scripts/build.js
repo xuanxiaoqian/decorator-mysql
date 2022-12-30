@@ -45,7 +45,3 @@ glob('src/**/*.ts', {}, function (_, files) {
     })
 })
 
-
-
-
-

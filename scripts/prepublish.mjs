@@ -17,6 +17,8 @@ try {
 
   await $`npm run build`
 
+  await $`npm run test`
+
   await $`git add .`
 
   await $`git commit -m "版本号: ${_data.version}"`

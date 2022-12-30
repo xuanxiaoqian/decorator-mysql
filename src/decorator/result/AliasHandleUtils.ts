@@ -12,7 +12,6 @@ export default class AliasHandleUtils {
   constructor(data: Object, config?: resultConfigType) {
     this.resultObject = data
     this.resultConfig = config
-
     this.handleAlias()
   }
 
@@ -38,6 +37,8 @@ export default class AliasHandleUtils {
     } else if (this.resultConfig?.exclude !== undefined) {
       recordKey = 'exclude'
     }
+
+
 
     switch (recordKey) {
       case 'only':

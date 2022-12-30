@@ -20,7 +20,8 @@ export default class PlaceHandleUtils {
   currentExecuteSql: string
 
   constructor(selectUtils: SelectUtils, paramsData: Array<any>) {
-    this.paramsType = Typeof(paramsData)
+    // 占位符的参数是根据传进来的第一个参数是不是对象来决定的
+    this.paramsType = Typeof(paramsData[0])
     this.selectUtils = selectUtils
     this.paramsData = paramsData
 
@@ -47,18 +48,16 @@ export default class PlaceHandleUtils {
       currentExecuteValueList.push(currentArgs)
     })
 
+    // #{}占位符
+    selectUtils.getPlaceHolderSymbolKeys().map(([replaceTag, matchName]) => {
+      let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
+      currentExecuteSql = currentExecuteSql.replace(replaceTag, `'${currentArgs}'`)
+    })
 
     // ${}占位符
     selectUtils.getPlaceHolderKeys().map(([replaceTag, matchName]) => {
       let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
       currentExecuteSql = currentExecuteSql.replace(replaceTag, currentArgs)
-    })
-
-
-    // #{}占位符
-    selectUtils.getPlaceHolderSymbolKeys().map(([replaceTag, matchName]) => {
-      let currentArgs = this.paramsType == 'object' ? args[0][matchName] : args[+matchName]
-      currentExecuteSql = currentExecuteSql.replace(replaceTag, `'${currentArgs}'`)
     })
 
 

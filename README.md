@@ -10,13 +10,15 @@
 
 <hr />
 
-
+框架使用jest全面测试
 
 ## 安装
 
 ~~~sh
 npm i decorator-mysql
 ~~~
+
+<br />
 
 
 

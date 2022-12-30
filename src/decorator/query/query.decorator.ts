@@ -33,7 +33,7 @@ const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
             Reflect.set(target, propertyKey, new Proxy(new Function(), {
                 apply: async (applyTarget, thisBinding, args) => {
                     if (selectUtils === undefined) {
-                        let selectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, target)
+                        let selectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, Reflect.get(target, propertyKey))
                         selectUtils = new SelectUtils(sql, selectResult)
                         currentExecuteSql = selectUtils.getTransformSql()
 

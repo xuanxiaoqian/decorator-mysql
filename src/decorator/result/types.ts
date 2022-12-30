@@ -5,12 +5,12 @@ type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T
 
 interface only<T> {
     // 只要哪些参数,和exclude互斥
-    only?: Array<keyof T>
+    only?: Array<T>
 }
 
 interface exclude<T> {
     // 只要哪些参数,和exclude互斥
-    exclude?: Array<keyof T>
+    exclude?: Array<T>
 }
 
 export type resultConfigType<T = never> = {
