@@ -27,7 +27,7 @@ const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
             // 是否纯sql,不携带任何参数
             let isPureSql: boolean = false
 
-            // 是使用的是@Select装饰器
+            // 是否使用的是@Select装饰器 而不是@SelectOne和@SelectOrigin
             let isPureSelect: boolean = false
 
             Reflect.set(target, propertyKey, new Proxy(new Function(), {
@@ -46,6 +46,9 @@ const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
                         if (!factoryConfig?.selectOne && !factoryConfig?.originResult) {
                             isPureSelect = true
                         }
+
+                        console.log(123);
+                        
                     }
 
 

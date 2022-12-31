@@ -93,8 +93,9 @@ export default class SelectUtils {
    * 处理sql预处理符 -> &{xxx}
    */
   private handlePreHandleRegExp() {
-    let temporaryRegExp
     let temporaryRegExpSql = this.transformSql
+
+    let temporaryRegExp
     while ((temporaryRegExp = preHandleRegExp.exec(temporaryRegExpSql))) {
       const [replaceTag, matchName] = temporaryRegExp
 

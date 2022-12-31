@@ -15,7 +15,8 @@ const columnDecoratorFactory = (isHump?: boolean) => {
 
             let smallHump = isHump ? humpToLine(propertyKey) : propertyKey
 
-            columns[propertyKey] = metadata?.name ?? smallHump
+            // 用户设置的name优先级最高
+            Reflect.set(columns, propertyKey, metadata?.name ?? smallHump)
 
             Reflect.defineMetadata(ENTITY_COLUMN, columns, target)
         }
