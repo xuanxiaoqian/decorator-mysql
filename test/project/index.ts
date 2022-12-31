@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { SelectOne, SelectOneResults, SelectOrigin, SelectOriginResults, Result } from "../../dist/index";
+import { SelectOne, SelectOneResults, SelectOrigin, SelectOriginResults, Result, Transactional, CreatePool, Delete } from "../../dist/index";
 import { initMysql } from "../../dist/index";
 import { Column, HumpColumn } from "../../dist/index";
 import { Select, SelectResults } from "../../dist/index";
@@ -98,4 +98,29 @@ export class ResultMapping {
     @Result(User, { alias: 'u' })
     @Select('select * from user u left join article a on u.user_id = a.user_id and u.user_id = 1')
     testResult6: () => SelectResults<User>
+
+    @Select('select * from user')
+    @Result(User)
+    testResult7: () => SelectResults<User>
 }
+
+class TransactionalMapping {
+    @Delete('delete from user where user_id = 1')
+    deleteUser: () => DeleteResults
+}
+
+
+
+export const userMapping = new UserMapping()
+export const resultMapping = new ResultMapping()
+export const transactionalMapping = new TransactionalMapping()
+
+class TransactionalService {
+    @Transactional()
+    async deleteUser(@CreatePool() pool?: Pool) {
+        transactionalMapping.deleteUser.call(pool)
+        throw new Error("error");
+    }
+}
+
+export const transactionalService = new TransactionalService()

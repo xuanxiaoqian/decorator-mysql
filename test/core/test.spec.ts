@@ -1,6 +1,4 @@
-import { UserMapping, pool, ResultMapping } from '../project/index'
-const userMapping = new UserMapping()
-const resultMapping = new ResultMapping()
+import { userMapping, pool, resultMapping, transactionalService } from '../project/index'
 
 describe("链接SQL", () => {
     test("它应该能正常链接MySQL并且能够执行SQL", async () => {
@@ -88,7 +86,25 @@ describe("result测试", () => {
         expect(data[0]['articleId']).toEqual(1);
         expect(data[0]['userName']).toEqual('root');
     });
+
+    test("它应该能正确的进行查询,无关result和select装饰器先后顺序", async () => {
+        const data = await resultMapping.testResult7()
+        expect(data[0]['userId']).toEqual(1);
+    });
 });
+
+describe("事务测试", () => {
+    test("它应该能正确回滚", async () => {
+        try {
+            await transactionalService.deleteUser()
+        } catch (error) {
+            
+        }
+        const data = await resultMapping.testResult7()
+        expect(data[0]['userId']).toEqual(1);
+    });
+});
+
 
 describe("关闭链接", () => {
     test("它应该能关闭链接", async () => {

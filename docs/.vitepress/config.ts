@@ -41,23 +41,19 @@ export default defineConfig({
       ],
       '/configDoc/': [
         {
-          text: '基础配置',
-          items: [{ text: '目录结构', link: '/configDoc/baseConfig/baseDir' }],
+          text: '数据源',
+          items: [{ text: '数据库连接', link: '/configDoc/baseConfig/baseDir' }],
         },
         {
-          text: '可选配置',
+          text: 'SQL装饰器',
           items: [
-            { text: 'axios', link: '/configDoc/optionConfig/axios/axios' },
-            { text: 'pinia', link: '/configDoc/optionConfig/pinia/pinia' },
-            { text: 'scss', link: '/configDoc/optionConfig/scss/scss' },
+            { text: '@Select', link: '/configDoc/optionConfig/select/select' },
           ],
         },
         {
-          text: '创建模块',
+          text: '返回值装饰器',
           items: [
-            { text: '介绍', link: '/configDoc/createConfig/guide' },
-            { text: 'router', link: '/configDoc/createConfig/router/router' },
-            { text: 'pinia', link: '/configDoc/createConfig/pinia/pinia' },
+            { text: '@Result', link: '/configDoc/createConfig/result/result' },
           ],
         },
       ],

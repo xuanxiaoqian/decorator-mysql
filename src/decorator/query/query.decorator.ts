@@ -47,8 +47,6 @@ const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
                             isPureSelect = true
                         }
 
-                        console.log(123);
-                        
                     }
 
 
@@ -65,7 +63,7 @@ const SqlDecoratorFactory = (factoryConfig?: factoryConfigType) => {
 
                     console.log(currentExecuteSql, currentExecuteValueList)
 
-                    const conn = pool
+                    const conn = thisBinding?.config?.port !== undefined ? thisBinding : pool
 
                     let rows = await conn.execute(currentExecuteSql, currentExecuteValueList) as Array<any>
 

@@ -31,7 +31,7 @@ findUser:(user:User) => SelectOriginResults<User>
 
 
 ## 1.3版本
-最终抛弃`1.2版本`的返回值简便包裹，实体类字段使用装饰器进行标识
+最终抛弃`1.2版本`的返回值包袱，实体类字段使用装饰器进行约束标识
 
 ```ts
 import { Column, HumpColumn } from 'decorator-mysql'

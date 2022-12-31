@@ -5,21 +5,26 @@ import { resultConfigType } from "./types";
 
 export const Result = <T extends new (...args: any[]) => any, K extends keyof InstanceType<T>>(entity: T, config?: resultConfigType<K>): PropertyDecorator => {
     return function (target, propertyKey) {
-        const entityObject = Reflect.getMetadata(ENTITY_COLUMN, entity.prototype) ?? {}
 
-        let currentSelectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, Reflect.get(target, propertyKey)) as string ?? ''
+        // 因为此依赖严重依赖Select装饰器,因为Select装饰器会定义一个函数,如果result比select先执行就会导致Reflect.get(target, propertyKey)获取的是undefined
+        process.nextTick(() => {
+            const entityObject = Reflect.getMetadata(ENTITY_COLUMN, entity.prototype) ?? {}
 
-        const aliasUtils = new AliasHandleUtils(entityObject, config as any)
+            let currentSelectResult = Reflect.getMetadata(CURRENT_SELECT_RESULT, Reflect.get(target, propertyKey)) as string ?? ''
 
-        currentSelectResult += aliasUtils.getHandleAlias()
+            const aliasUtils = new AliasHandleUtils(entityObject, config as any)
+
+            currentSelectResult += aliasUtils.getHandleAlias()
 
 
-        // 过滤掉多余的逗号 -> ,
-        currentSelectResult = currentSelectResult
-            .split(',')
-            .filter((v) => v)
-            .join(', ')
+            // 过滤掉多余的逗号 -> ,
+            currentSelectResult = currentSelectResult
+                .split(',')
+                .filter((v) => v)
+                .join(', ')
 
-        Reflect.defineMetadata(CURRENT_SELECT_RESULT, currentSelectResult, Reflect.get(target, propertyKey))
+            Reflect.defineMetadata(CURRENT_SELECT_RESULT, currentSelectResult, Reflect.get(target, propertyKey))
+        })
+
     }
 }
