@@ -2,8 +2,9 @@
 
 import { SelectOne, SelectOneResults, SelectOrigin, SelectOriginResults, Result, Transactional, CreatePool, Delete } from "../../dist/index";
 import { initMysql } from "../../dist/index";
-import { Column, HumpColumn } from "../../dist/index";
 import { Select, SelectResults } from "../../dist/index";
+import { User } from './user.entity'
+import { Article } from './article.entity'
 
 export const pool = initMysql({
     host: 'localhost',
@@ -15,35 +16,6 @@ export const pool = initMysql({
 });
 
 
-
-export class User {
-
-    @Column({ name: 'user_id' })
-    userId: number
-
-    @HumpColumn()
-    userName: string
-
-    @Column()
-    password: string
-}
-
-
-
-export class Article {
-
-    @HumpColumn()
-    articleId: number
-
-    @Column()
-    title: string
-
-    @HumpColumn()
-    userId: string
-
-    @Column()
-    content: string
-}
 
 
 export class UserMapping {

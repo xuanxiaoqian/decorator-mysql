@@ -10,7 +10,7 @@
 
 <hr />
 
-框架使用jest全面测试
+文档：<a href="http://decorator-mysql.xuanxiaoqian.com">文档网站</a>
 
 ## 安装
 
@@ -18,48 +18,55 @@
 npm i decorator-mysql
 ~~~
 
-<br />
+  
 
+  
 
+## 快速开始
 
-使用文档晚点出,最近更新比较频繁
+1. 初始化数据源
 
+   ```ts
+   import { initMysql } from "decorator-mysql";
+   
+   const pool = initMysql({
+       host: 'localhost',
+       user: 'root',
+       password: '123456',
+       database: 'decorator_mysql',
+       port: 3306,
+       connectionLimit: 10,
+   });
+   ```
 
+2. 查询装饰器
+
+   ```ts
+   import { Select, SelectResults } from 'decorator-mysql'
+   
+   @Select('select * from user')
+   selectUserById: () => SelectResults<any>
+   ```
+
+3. 使用
+
+   ```ts
+   await new xxx().selectUserById()
+   ```
+
+   
+
+​    
 
 ## 趣味对比
 
-测试时间：2022/12/20
+​    
+
+​    
+
+​    
 
 
-
-使用Date.now()计算Typeorm和Decorator-mysql的查询时间
-
-
-
-typeorm示例：
-
-```ts
-await this.articleRepository.find();
-```
-
-decorator-mysq示例l： 
-
-```ts
-@Select('select * from user;')
-selectUserAll: () => SelectResults<User>;
-```
-
-
-
-运行五次，每次读取五次 数值相加(等于号后面是平均值)：
-
-typeorm：15 9 10 9 12 11 = 13.2	
-
-decorator-mysql：12 15 12 14 13 = 13.2
-
-
-
-decorator-mysql还需要性能优化
 
 ## 疑问交流
 

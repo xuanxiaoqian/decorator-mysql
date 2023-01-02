@@ -3,7 +3,7 @@
 仓库地址：
 
 ```sh
-git clone https://gitee.com/xuanxiaoqian/decorator-mysql
+git clone https://gitee.com/lianxuan7/nest-decorator_mysql-demo
 
 npm install
 

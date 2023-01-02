@@ -9,9 +9,9 @@ export default class AliasHandleUtils {
 
   private transformAlias = ''
 
-  constructor(data: Object, config?: resultConfigType) {
-    this.resultObject = data
-    this.resultConfig = config
+  constructor(resultObject: Object, resultConfig?: resultConfigType) {
+    this.resultObject = resultObject
+    this.resultConfig = resultConfig
     this.handleAlias()
   }
 

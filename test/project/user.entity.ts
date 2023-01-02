@@ -1,13 +1,15 @@
-// import { Column, HumpColumn } from "../../dist/index";
+// @ts-nocheck
 
-// export class User {
+import { Column, HumpColumn } from "../../dist/index";
 
-//     @Column({ name: 'user_id' })
-//     userId: number
+export class User {
 
-//     @HumpColumn()
-//     userName: string
+    @Column({ name: 'user_id' })
+    userId: number
 
-//     @Column()
-//     passwrd: string
-// }
+    @HumpColumn()
+    userName: string
+
+    @Column()
+    password: string
+}

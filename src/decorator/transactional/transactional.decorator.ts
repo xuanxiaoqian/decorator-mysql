@@ -1,7 +1,12 @@
 import { pool } from "../../mysql"
-import { CREATEPOOL } from '../constants'
+import { CREATE_POOL } from '../constants'
 
 
+/**
+ * 开启事务 异常回滚
+ * @param transactionKey 
+ * @returns 
+ */
 export const Transactional = (transactionKey?: string): MethodDecorator => {
     return function (target, propertyKey, descriptor: PropertyDescriptor) {
         descriptor.value = new Proxy(Reflect.get(target, propertyKey), {
@@ -30,8 +35,13 @@ export const Transactional = (transactionKey?: string): MethodDecorator => {
     }
 }
 
+
+/**
+ * 创建一个连接池,需配合Transactional装饰器一起使用
+ * @returns 
+ */
 export const CreatePool = (): ParameterDecorator => {
     return function (target, propertyKey, parameterIndex) {
-        Reflect.defineMetadata(CREATEPOOL, parameterIndex, target, propertyKey);
+        Reflect.defineMetadata(CREATE_POOL, parameterIndex, Reflect.get(target, propertyKey));
     }
 }

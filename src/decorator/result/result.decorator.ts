@@ -1,12 +1,13 @@
 import { CURRENT_SELECT_RESULT, ENTITY_COLUMN } from "../constants";
 import AliasHandleUtils from "./AliasHandleUtils";
 import { resultConfigType } from "./types";
+import { filterComma } from "./utils";
 
 
 export const Result = <T extends new (...args: any[]) => any, K extends keyof InstanceType<T>>(entity: T, config?: resultConfigType<K>): PropertyDecorator => {
     return function (target, propertyKey) {
 
-        // 因为此依赖严重依赖Select装饰器,因为Select装饰器会定义一个函数,如果result比select先执行就会导致Reflect.get(target, propertyKey)获取的是undefined
+        // 此依赖严重依赖Select装饰器,因为Select装饰器会查询定义一个函数,如果result比select先执行就会导致Reflect.get(target, propertyKey)获取的是undefined
         process.nextTick(() => {
             const entityObject = Reflect.getMetadata(ENTITY_COLUMN, entity.prototype) ?? {}
 
@@ -18,10 +19,7 @@ export const Result = <T extends new (...args: any[]) => any, K extends keyof In
 
 
             // 过滤掉多余的逗号 -> ,
-            currentSelectResult = currentSelectResult
-                .split(',')
-                .filter((v) => v)
-                .join(', ')
+            currentSelectResult = filterComma(currentSelectResult)
 
             Reflect.defineMetadata(CURRENT_SELECT_RESULT, currentSelectResult, Reflect.get(target, propertyKey))
         })
