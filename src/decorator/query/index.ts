@@ -1,3 +1,3 @@
-export * from '../query/resultType'
 export * from './query.decorator'
+export * from './resultType'
 

@@ -1,6 +1,6 @@
 {
   "name": "decorator-mysql",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "爱用装饰器风格查询MySQL的框架一枚鸭~",
   "main": "dist/index.js",
   "files": [
