@@ -10,7 +10,7 @@
 
 <hr />
 
-文档：<a href="http://decorator-mysql.xuanxiaoqian.com">文档网站</a>
+文档：<a href="http://decorator-mysql.xuanxiaoqian.com" target="_blank">文档网站</a>
 
 ## 安装
 
@@ -18,9 +18,9 @@
 npm i decorator-mysql
 ~~~
 
-  
+​      
 
-  
+​      
 
 ## 快速开始
 

@@ -18,5 +18,5 @@ export type resultConfigType<T = never> = {
     alias?: string
 
     // 自定义的sql,拼接在select和from中间
-    custom?: string
+    custom?: Array<string>
 } & XOR<only<T>, exclude<T>>

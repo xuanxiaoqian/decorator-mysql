@@ -76,7 +76,7 @@ export default class AliasHandleUtils {
  * 根据配置的custom拼接参数
  */
   private handleCustom() {
-    this.transformAlias += this.resultConfig?.custom ? this.resultConfig?.custom + ',' : ''
+    this.transformAlias += this.resultConfig?.custom ? this.resultConfig?.custom.join(',') : ''
   }
 
 

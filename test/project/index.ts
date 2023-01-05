@@ -62,7 +62,7 @@ export class ResultMapping {
     @Select('select * from user u where user_id = 1')
     testResult4: () => SelectResults<User>
 
-    @Result(User, { custom: '1+1 as count' })
+    @Result(User, { custom: ['1+1 as count'] })
     @Select('select * from user u where user_id = 1')
     testResult5: () => SelectResults<User>
 
