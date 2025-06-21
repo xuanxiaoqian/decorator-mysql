@@ -1,65 +1,50 @@
 import { defineConfig } from 'vitepress'
+import { footerConfig } from './config/footer'
+import { headConfig } from './config/head'
+import { i18nConfig } from './config/i18n'
+import { markdownConfig } from './config/markdown'
+import { navConfig } from './config/nav'
+import { sidebarConfig } from './config/sidebar'
+
 
 export default defineConfig({
-  title: 'decorator-mysql',
-  description: '爱用装饰器风格查询MySQL的框架一枚鸭~',
-  head: [
-    ['link', { rel: 'icon', href: '/xuanxiaoqian.png' }],
-    [
-      'meta',
-      { name: 'keywords', content: 'decorator-mysql 首页,decorator-mysql 文档,轩小浅' },
-    ],
-    ['meta', { name: 'author', content: '轩小浅' }],
-  ],
+  ignoreDeadLinks: true,
+  title: '轩小浅',
+  description: '轩小浅官网',
+  head: headConfig,
+  lastUpdated: true,
   themeConfig: {
-    logo: '/xuanxiaoqian.png',
-    siteTitle: 'decorator-mysql',
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/xuanxiaoqian/decorator-mysql' },
-    ],
-    nav: [
-      { text: '指南', link: '/guide/about' },
-      {
-        text: '配置参考',
-        link: '/configDoc/baseConfig/baseDir',
-      },
-      { text: '更多说明', link: '/more/' },
-    ],
-
-    sidebar: {
-      '/guide/': [
-        {
-          text: '介绍',
-          items: [
-            { text: '关于框架', link: '/guide/about' },
-            { text: '极速体验', link: '/guide/installation' },
-            { text: '发展历程', link: '/guide/history' },
-            { text: '相关讲解', link: '/guide/explain' },
-            { text: '配置参考', link: '/guide/configRef' },
-          ],
-        },
-      ],
-      '/configDoc/': [
-        {
-          text: '数据源',
-          items: [{ text: '数据库连接', link: '/configDoc/baseConfig/baseDir' }],
-        },
-        {
-          text: 'SQL装饰器',
-          items: [
-            { text: '@Select', link: '/configDoc/optionConfig/select/select' },
-          ],
-        },
-        {
-          text: '返回值装饰器',
-          items: [
-            { text: '@Result', link: '/configDoc/createConfig/result/result' },
-          ],
-        },
-      ],
+    logo: '/xuanxiaoqian.webp',
+    footer: footerConfig,
+    siteTitle: '轩小浅',
+    nav: navConfig,
+    sidebar: sidebarConfig,
+    outline: 'deep',
+    lastUpdated: {
+      text: '最后更新时间'
     },
+    search: {
+      provider: 'local',
+      options: {
+        translations: {
+          button: {
+            buttonText: '搜索文档',
+            buttonAriaLabel: '搜索文档'
+          },
+          modal: {
+            noResultsText: '无法找到相关结果',
+            resetButtonTitle: '清除查询条件',
+            footer: {
+              selectText: '选择',
+              navigateText: '切换',
+              closeText: '关闭'
+            }
+          }
+        },
+      }
+    },
+
+    ...i18nConfig
   },
-  markdown: {
-    externalLinks: { target: '_blank', rel: 'nofollow noopener noreferrer' },
-  },
+  markdown: markdownConfig
 })

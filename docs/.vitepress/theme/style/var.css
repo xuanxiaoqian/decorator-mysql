@@ -1,17 +1,15 @@
 :root {
+  /** 主页的一行字 **/
+  --vp-c-text-2: #575757;
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(
-    135deg,
-    #eead92 10%,
-    #6018dc 100%
-  );
+  --vp-home-hero-name-background: linear-gradient(135deg,
+      #eead92 10%,
+      #6018dc 100%);
 
   /* 图标背景 */
-  --vp-home-hero-image-background-image: linear-gradient(
-    135deg,
-    #81ffef 10%,
-    #f067b4 100%
-  );
+  --vp-home-hero-image-background-image: linear-gradient(135deg,
+      #81ffef 10%,
+      #f067b4 100%);
   --vp-home-hero-image-filter: blur(150px);
 
   /* brand按钮 */
@@ -37,15 +35,36 @@
 
   -webkit-tap-highlight-color: transparent;
 
-  /* 修改 `` 样式*/
+  /* 修改 `高亮` 样式*/
   --vp-c-bg-mute: #f8f8f8;
   --vp-c-text-code: #e96900;
+
+  --xuan-footer-a-color: #2E2EFF;
+
+  /* >字体样式 */
+  --xuan-blockquote-font-color: #777;
+
+  /* **加粗字体样式 */
+  --xuan-strong-font-color: #FED33C;
+
+  /* 导航栏选中字体颜色 */
+  --xuan-outline-link-active-font-color: #3a5ccc;
 }
 
-/* 修改 > 样式*/
-.vp-doc blockquote {
-  border-left: 4px solid #42b983;
-  padding: 10px 15px;
-  color: #777;
-  background-color: rgba(66, 185, 131, 0.1);
+.dark {
+  --vp-c-text-2: #A8A8A8;
+
+  /* 修改 `高亮` 样式*/
+  --vp-c-bg-mute: #1a1a1a;
+  --vp-c-text-code: #f1c40f;
+
+  --xuan-footer-a-color: #ffffff;
+
+  --xuan-blockquote-font-color: #bbb;
+
+  /* **加粗字体样式 */
+  --xuan-strong-font-color: #dfac46;
+
+  /* 导航栏选中字体颜色 */
+  --xuan-outline-link-active-font-color: #a8b1ff;
 }
